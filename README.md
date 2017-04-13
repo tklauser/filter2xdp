@@ -1,12 +1,12 @@
-# pcap2xdp - Compile and load PCAP filter expression as XDP BPF program
+# pcap2xdp
 
 pcap2xdp will take a [pcap/tcpdump filter
 expression](http://www.tcpdump.org/manpages/pcap-filter.7.html), compile it to
-classical BPF (cBPF) using libpcap, convert it to eBPF and load it as an XDP
-BPF program. By default, the XDP program will only pass packets to the Linux
-network stack which match the filter expression. If the XDP program is loaded
-using the `--invert` option, the filter is reversed and the program will drop
-all packets matching the filter expression.
+classical BPF (cBPF) using libpcap, convert it to extended BPF (eBPF) and load
+it as an XDP BPF program. By default, the XDP program will only pass packets to
+the Linux network stack which match the filter expression. If the XDP program
+is loaded using the `--invert` option, the filter is reversed and the program
+will drop all packets matching the filter expression.
 
 This is work in progress and only rudimentarily tested. Feedback, suggestions
 and patches are welcome!
