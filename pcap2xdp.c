@@ -126,7 +126,8 @@ int main(int argc, char **argv)
 	filter = argv2str(optind, argc, argv);
 	ifindex = dev_get_ifindex(ifname);
 
-	printf("PCAP filter string: %s\n", filter);
+	if (verbose)
+		printf("PCAP filter string: %s\n", filter);
 
 	memset(&cbpf, 0, sizeof(cbpf));
 	filter_try_compile(filter, &cbpf, dev_get_iftype(ifname));
