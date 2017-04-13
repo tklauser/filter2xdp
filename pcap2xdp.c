@@ -40,7 +40,7 @@ void __noreturn usage(void)
 	printf("Usage: pcap2xdp [OPTIONS...] -i <dev> FILTER\n"
 	       "Options:\n"
 	       "  -i/--interface <dev>  Network device (required)\n"
-	       "  -n/--invert           Invert filter, drop non-matching packets\n"
+	       "  -n/--invert           Invert filter, drop matching packets\n"
 	       "  -v/--verbose          Verbose mode\n"
 	       "  -h/--help             Show this help message\n");
 
