@@ -36,3 +36,9 @@ filter2xdp is subject to the GPL, version 2.
 
 Please see the [COPYING](https://github.com/tklauser/filter2xdp/blob/master/COPYING)
 file for the full license text.
+
+Resources
+=========
+
+* [eBPF docs](https://prototype-kernel.readthedocs.io/en/latest/bpf/index.html) and [XDP docs](https://prototype-kernel.readthedocs.io/en/latest/networking/XDP/index.html) in the Linux Networking Subsystem documentation by Jesper Dangaard Brouer
+* [BPF and XDP Reference Guide](http://cilium.readthedocs.io/en/latest/bpf/#bpf-and-xdp-reference-guide) from the [Cilium](https://github.com/cilium/cilium) developer's guide
