@@ -41,9 +41,6 @@
 # endif
 #endif
 
-/* XXX */
-#define BPF_PROG_TYPE_XDP (BPF_PROG_TYPE_SCHED_ACT + 2)
-
 #define BPF_LOG_BUF_SIZE 65536
 
 static char license[128] = "GPL";
