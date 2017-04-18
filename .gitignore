@@ -1,2 +1,2 @@
 *.o
-pcap2xdp
+filter2xdp

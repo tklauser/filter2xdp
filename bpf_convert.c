@@ -352,7 +352,7 @@ do_pass:
 		case BPF_RET | BPF_A:
 		case BPF_RET | BPF_K:
 			if (BPF_RVAL(fp->code) == BPF_K) {
-				/* Changed for pcap2xdp. Map pcap cBPF return
+				/* Changed for filter2xdp. Map pcap cBPF return
 				 * codes codes to XDP return codes:
 				 *
 				 *   0 -> XDP_PASS

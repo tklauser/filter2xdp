@@ -1,6 +1,6 @@
-# pcap2xdp
+# filter2xdp
 
-pcap2xdp will take a [pcap/tcpdump filter
+filter2xdp will take a [pcap/tcpdump filter
 expression](http://www.tcpdump.org/manpages/pcap-filter.7.html), compile it to
 classical BPF (cBPF) using libpcap, convert it to extended BPF (eBPF) and load
 it as an XDP BPF program. By default, the XDP program will only pass packets to
@@ -15,7 +15,7 @@ Usage
 =====
 
 ```
-Usage: pcap2xdp [OPTIONS...] -i <dev> FILTER
+Usage: filter2xdp [OPTIONS...] -i <dev> FILTER
 Options:
   -i/--interface <dev>  Network device (required)
   -n/--invert           Invert filter, drop matching packets
@@ -32,7 +32,7 @@ Prerequisites
 License
 =======
 
-pcap2xdp is subject to the GPL, version 2.
+filter2xdp is subject to the GPL, version 2.
 
-Please see the [COPYING](https://github.com/tklauser/pcap2xdp/blob/master/COPYING)
+Please see the [COPYING](https://github.com/tklauser/filter2xdp/blob/master/COPYING)
 file for the full license text.

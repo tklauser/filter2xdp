@@ -1,5 +1,5 @@
 /*
- * pcap2xdp - compile and load PCAP filter expression as XDP BPF program.
+ * filter2xdp - compile and load PCAP filter expression as XDP BPF program.
  *
  * Copyright (C) 2017 Tobias Klauser
  * Subject to the GPL, version 2.
@@ -37,7 +37,7 @@ static const struct option long_opts[] = {
 
 void __noreturn usage(void)
 {
-	printf("Usage: pcap2xdp [OPTIONS...] -i <dev> FILTER\n"
+	printf("Usage: filter2xdp [OPTIONS...] -i <dev> FILTER\n"
 	       "Options:\n"
 	       "  -i/--interface <dev>  Network device (required)\n"
 	       "  -n/--invert           Invert filter, drop matching packets\n"

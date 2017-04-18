@@ -1,9 +1,9 @@
-# Makefile for pcap2xdp
+# Makefile for filter2xdp
 #
 # Copyright (C) 2017 Tobias Klauser <tklauser@distanz.ch>
 
-PROG = pcap2xdp
-OBJS = bpf_convert.o bpf_load.o cbpf.o ebpf.o filter_comp.o utils.o pcap2xdp.o
+PROG = filter2xdp
+OBJS = bpf_convert.o bpf_load.o cbpf.o ebpf.o filter_comp.o utils.o filter2xdp.o
 
 LIBS = -lpcap
 INCS =
