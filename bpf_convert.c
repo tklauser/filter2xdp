@@ -18,7 +18,6 @@
 #include <linux/filter.h>
 
 #include "utils.h"
-#include "xdp.h"
 
 /* The macros below are taken from include/linux/filter.h in the Linux kernel
  * sources

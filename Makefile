@@ -6,7 +6,7 @@ PROG = filter2xdp
 OBJS = bpf_convert.o bpf_load.o cbpf.o ebpf.o filter_comp.o utils.o filter2xdp.o
 
 LIBS = -lpcap
-INCS =
+INCS = -Iinclude
 
 CC	= $(CROSS_COMPILE)gcc
 INSTALL	= install
