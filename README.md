@@ -8,8 +8,9 @@ the Linux network stack which match the filter expression. If the XDP program
 is loaded using the `--invert` option, the filter is reversed and the program
 will drop all packets matching the filter expression.
 
-This is work in progress and only rudimentarily tested. Feedback, suggestions
-and patches are welcome!
+*Note*: This is work in progress and not working yet as intended (i.e. no valid
+XDP eBPF programs are generated). However, Feedback, suggestions and patches
+are already welcome!
 
 Usage
 =====
