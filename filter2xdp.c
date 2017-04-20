@@ -26,13 +26,14 @@ void filter_try_compile(const char *str, struct sock_fprog *cbpf, int link_type)
 int bpf_convert_filter(struct sock_filter *prog, size_t len,
 		       struct bpf_insn *new_prog, size_t *new_len, bool invert);
 
-static const char *short_opts = "i:nhv";
+static const char *short_opts = "i:nrhq";
 static const struct option long_opts[] = {
 	{ "interface",	required_argument,	NULL,	'i' },
 	{ "invert",	no_argument,		NULL,	'n' },
+	{ "raw",	no_argument,		NULL,	'r' },
 	{ "help",	no_argument,		NULL,	'h' },
-	{ "verbose",	no_argument,		NULL,	'v' },
-	{ NULL,		0,			NULL,	0}
+	{ "quiet",	no_argument,		NULL,	'q' },
+	{ NULL,		0,			NULL,	0 }
 };
 
 void __noreturn usage(void)
@@ -41,7 +42,8 @@ void __noreturn usage(void)
 	       "Options:\n"
 	       "  -i/--interface <dev>  Network device (required)\n"
 	       "  -n/--invert           Invert filter, drop matching packets\n"
-	       "  -v/--verbose          Verbose mode\n"
+	       "  -r/--raw              Show raw eBPF instructions\n"
+	       "  -q/--quiet            Quiet mode\n"
 	       "  -h/--help             Show this help message\n");
 
 	exit(EXIT_SUCCESS);
@@ -96,7 +98,7 @@ static int dev_get_ifindex(const char *ifname)
 int main(int argc, char **argv)
 {
 	int c, ret, ifindex, fd;
-	bool verbose = false, invert = false;
+	bool verbose = true, invert = false, raw = false;
 	const char *ifname = NULL;
 	const char *filter = NULL;
 	struct sock_fprog cbpf;
@@ -111,11 +113,14 @@ int main(int argc, char **argv)
 		case 'n':
 			invert = true;
 			break;
+		case 'r':
+			raw = true;
+			break;
 		case 'h':
 			usage();
 			break;
-		case 'v':
-			verbose = true;
+		case 'q':
+			verbose = false;
 			break;
 		}
 	}
@@ -134,7 +139,7 @@ int main(int argc, char **argv)
 
 	if (verbose) {
 		printf("cBPF program (%u insns):\n", cbpf.len);
-		cbpf_dump_all(&cbpf);
+		cbpf_dump_all(&cbpf, raw);
 	}
 
 	/* 1st pass: calculate the eBPF program length */
@@ -151,7 +156,7 @@ int main(int argc, char **argv)
 
 	if (verbose) {
 		printf("eBPF program (%zu insns):\n", ebpf_len);
-		ebpf_dump_all(ebpf, ebpf_len);
+		ebpf_dump_all(ebpf, ebpf_len, raw);
 	}
 
 	fd = bpf_load_and_attach_xdp(ebpf, ebpf_len);

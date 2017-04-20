@@ -11,6 +11,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -110,12 +111,21 @@ static const char *cbpf_dump_linux_k(uint32_t k)
 	}
 }
 
-static char *__cbpf_dump(const struct sock_filter bpf, int n)
+static char *__cbpf_dump(const struct sock_filter bpf, int n, bool raw)
 {
 	int v;
 	const char *fmt, *op;
 	static char image[256];
 	char operand[64];
+	char raw_insn[64] = {};
+
+	if (raw) {
+		uint8_t r[8];
+		memcpy(&r, &bpf, sizeof(r));
+		snprintf(raw_insn, sizeof(raw_insn), "%02x %02x %02x %02x %02x %02x %02x %02x ",
+			 r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7]);
+		raw_insn[sizeof(raw_insn) - 1] = '\0';
+	}
 
 	v = bpf.k;
 	switch (bpf.code) {
@@ -328,18 +338,18 @@ static char *__cbpf_dump(const struct sock_filter bpf, int n)
 	snprintf(image, sizeof(image),
 		 (BPF_CLASS(bpf.code) == BPF_JMP &&
 		  BPF_OP(bpf.code) != BPF_JA) ?
-		 " L%d: %s %s, L%d, L%d" : " L%d: %s %s",
-		 n, op, operand, n + 1 + bpf.jt, n + 1 + bpf.jf);
+		 " L%d:\t%s%s %s, L%d, L%d" : " L%d:\t%s%s %s",
+		 n, raw_insn, op, operand, n + 1 + bpf.jt, n + 1 + bpf.jf);
 	image[sizeof(image) - 1] = '\0';
 	return image;
 }
 
-void cbpf_dump_all(struct sock_fprog *bpf)
+void cbpf_dump_all(struct sock_fprog *bpf, bool raw)
 {
 	int i;
 
 	for (i = 0; i < bpf->len; ++i)
-		printf("%s\n", __cbpf_dump(bpf->filter[i], i));
+		printf("%s\n", __cbpf_dump(bpf->filter[i], i, raw));
 }
 
 int cbpf_validate(const struct sock_fprog *bpf)

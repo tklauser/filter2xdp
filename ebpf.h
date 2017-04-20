@@ -8,10 +8,11 @@
 #ifndef __EBPF_H
 #define __EBPF_H
 
+#include <stdbool.h>
 #include <stdlib.h>
 
 #include <linux/bpf.h>
 
-void ebpf_dump_all(struct bpf_insn *bpf, size_t len);
+void ebpf_dump_all(struct bpf_insn *bpf, size_t len, bool raw);
 
 #endif /* __EBPF_H */

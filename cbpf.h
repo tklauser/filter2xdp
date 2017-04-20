@@ -10,12 +10,13 @@
 #ifndef __CBPF_H
 #define __CBPF_H
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 
 #include <linux/filter.h>
 
-void cbpf_dump_all(struct sock_fprog *bpf);
+void cbpf_dump_all(struct sock_fprog *bpf, bool raw);
 int cbpf_validate(const struct sock_fprog *bpf);
 
 #endif /* __CBPF_H */

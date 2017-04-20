@@ -8,9 +8,11 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <linux/bpf.h>
 
+#include "ebpf.h"
 #include "utils.h"
 
 #define BPF_OP_INDEX(x)		(BPF_OP(x) >> 4)
@@ -65,12 +67,21 @@ static const char *const jump_tbl[16] = {
 };
 
 /* TODO: disassemble all possible eBPF insns */
-static void __ebpf_dump(const struct bpf_insn insn, size_t n)
+static void __ebpf_dump(const struct bpf_insn insn, size_t n, bool raw)
 {
 	const char *op, *postfix = "";
 	uint8_t cls = BPF_CLASS(insn.code);
 
-	printf(" L%zu: ", n);
+	printf(" L%zu:\t", n);
+
+	if (raw) {
+		uint8_t r[8];
+		int i;
+		memcpy(&r, &insn, sizeof(r));
+		for (i = 0; i < 8; i++)
+			printf("%02x ", r[i]);
+	}
+
 	switch (cls) {
 	default:
 		printf("unimp 0x%x // class: %s\n", insn.code, class_tbl[cls]);
@@ -87,15 +98,20 @@ static void __ebpf_dump(const struct bpf_insn insn, size_t n)
 		break;
 	case BPF_LD:
 		op = "ld";
-		postfix = size_tbl[BPF_SIZE_INDEX(insn.code)]; 
+		postfix = size_tbl[BPF_SIZE_INDEX(insn.code)];
 		if (BPF_MODE(insn.code) == BPF_IMM)
-			printf("%s%s #0x%x\n", op, postfix, insn.imm);
+			printf("%s%s r%d, #0x%x\n", op, postfix, insn.dst_reg, insn.imm);
 		else if (BPF_MODE(insn.code) == BPF_ABS)
-			printf("%s%s [%d]\n", op, postfix, insn.imm);
+			printf("%s%s r%d, [%d]\n", op, postfix, insn.dst_reg, insn.imm);
 		else if (BPF_MODE(insn.code) == BPF_IND)
-			printf("%s%s [r%u + %d]\n", op, postfix, insn.src_reg, insn.imm);
+			printf("%s%s r%d, [r%u + %d]\n", op, postfix, insn.dst_reg, insn.src_reg, insn.imm);
 		else
 			printf("// BUG: LD opcode 0x%02x in eBPF insns\n", insn.code);
+		break;
+	case BPF_LDX:
+		op = "ldx";
+		postfix = size_tbl[BPF_SIZE_INDEX(insn.code)];
+		printf("%s%s r%d, [r%u + %d]\n", op, postfix, insn.dst_reg, insn.src_reg, insn.off);
 		break;
 #define L(pc, off)	((int)(pc) + 1 + (off))
 	case BPF_JMP:
@@ -115,10 +131,10 @@ static void __ebpf_dump(const struct bpf_insn insn, size_t n)
 	}
 }
 
-void ebpf_dump_all(struct bpf_insn *bpf, size_t len)
+void ebpf_dump_all(struct bpf_insn *bpf, size_t len, bool raw)
 {
 	size_t i;
 
 	for (i = 0; i < len; ++i)
-		__ebpf_dump(bpf[i], i);
+		__ebpf_dump(bpf[i], i, raw);
 }
